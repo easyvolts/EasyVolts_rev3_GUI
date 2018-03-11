@@ -1,0 +1,18 @@
+The device accepts following commands:
+1) uXXXX\r\n - sets voltage, where XXX is desired voltage in mV. For example u3300\r\n will set output to 3v3. Max value is 24000.
+2) iXXXX\r\n - sets current limit, where XXX is desired current limit in mA. For example i100 sets current limit to 100mA. Max value is 1000.
+3) U\r\n - switches on USB-UART mode. Pins Tx and Rx will be connected to UART(A,B - not used).
+4) M\r\n - switches on USB-RS485 mode. Pins Tx and Rx can be used as GPIO/PWM. A,B - are used by USB-RS485 converter.
+5) zTh\r\n or zTl\r\n or zT\r\n - sets Tx pin in Z-state with pullUp/pullDown/noPull respectively.
+6) zRh\r\n or zRl\r\n or zR\r\n - sets Rx pin in Z-state with pullUp/pullDown/noPull respectively.
+7) rT\r\n or rR\r\n - reads Tx/Rx pin respectively (it can be IN or OUT, it doesn't matter. Current state will be returned).
+   In responce message like "T1\r\n","T0\r\n" or "R1\r\n","R0\r\n" will be returned.
+8) hT\r\n or lT\r\n - sets Tx pin in activeHigh/activeLow state respectively.
+9) hR\r\n or lR\r\n - sets Rx pin in activeHigh/activeLow state respectively.
+10) fXXXXX\r\n - defines PWM frequency division (base frequency is 240kHz). Max value is 65535.
+11) pRXXXX\r\n or pTXXXX\r\b - sets Rx or Tx pin PWM duty cycle respectively. Max value is 1000, which means 100% in 0.1% units.
+
+The device periodically sends to PC strings with measured output voltage, current and state. The strings look like:
+"EasyVolts 	U(mV)=3300    	^I(mA)=100\r\n" - Uout=3v3, Iout=100mA, "^" - means that overcurrent protection is active.
+"EasyVolts 	U(mV)=3300    	 I(mA)=100\r\n" - Uout=3v3, Iout=100mA, " " - means that output is active, no overload.
+"EasyVolts 	U(mV)=3300    	_I(mA)=0\r\n"   - Uout=3v3, Iout=0mA,   "_" - means that output is OFF, current = 0, but voltage on output is 3v3(for exaple if there is an external source connected).
